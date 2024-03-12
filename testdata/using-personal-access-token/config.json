@@ -1,0 +1,6 @@
+{
+  "personalAccessTokenSecretReference": {
+    "name": "gandi",
+    "key": "personalAccessToken"
+  }
+}
