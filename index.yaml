@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  cert-manager-webhook-gandi:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2024-03-12T23:35:14.664661645Z"
+    description: A cert-manager ACME DNS01 solver webhook for Gandi DNS.
+    digest: 014f047be09bfec6476f4778f9114e108ac8c896fc82e41ee96c934c6f83fba8
+    name: cert-manager-webhook-gandi
+    urls:
+    - https://github.com/sbach/cert-manager-webhook-gandi/releases/download/cert-manager-webhook-gandi-1.0.0/cert-manager-webhook-gandi-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-03-12T23:35:14.664692793Z"
