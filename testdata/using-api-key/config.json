@@ -1,0 +1,6 @@
+{
+  "apiKeySecretReference": {
+    "name": "gandi",
+    "key": "apiKey"
+  }
+}
