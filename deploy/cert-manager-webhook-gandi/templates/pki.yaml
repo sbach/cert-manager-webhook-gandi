@@ -1,0 +1,68 @@
+# Self-signed Issuer to create a root CA certificate for signing webhook serving certificates
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "cert-manager-webhook-gandi.selfSignedIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ include "cert-manager-webhook-gandi.name" . }}
+    chart: {{ include "cert-manager-webhook-gandi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selfSigned: {}
+---
+# CA Certificate used to sign certificates for the webhook
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "cert-manager-webhook-gandi.rootCACertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ include "cert-manager-webhook-gandi.name" . }}
+    chart: {{ include "cert-manager-webhook-gandi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ include "cert-manager-webhook-gandi.rootCACertificate" . }}
+  duration: 43800h
+  issuerRef:
+    name: {{ include "cert-manager-webhook-gandi.selfSignedIssuer" . }}
+  commonName: "ca.cert-manager-webhook-gandi.cert-manager"
+  isCA: true
+---
+# Issuer using the above generated CA certificate to issue certificates
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "cert-manager-webhook-gandi.rootCAIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ include "cert-manager-webhook-gandi.name" . }}
+    chart: {{ include "cert-manager-webhook-gandi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ca:
+    secretName: {{ include "cert-manager-webhook-gandi.rootCACertificate" . }}
+---
+# Serving certificate for the webhook
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "cert-manager-webhook-gandi.servingCertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ include "cert-manager-webhook-gandi.name" . }}
+    chart: {{ include "cert-manager-webhook-gandi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  secretName: {{ include "cert-manager-webhook-gandi.servingCertificate" . }}
+  duration: 8760h
+  issuerRef:
+    name: {{ include "cert-manager-webhook-gandi.rootCAIssuer" . }}
+  dnsNames:
+    - {{ include "cert-manager-webhook-gandi.fullname" . }}
+    - {{ include "cert-manager-webhook-gandi.fullname" . }}.{{ .Release.Namespace }}
+    - {{ include "cert-manager-webhook-gandi.fullname" . }}.{{ .Release.Namespace }}.svc

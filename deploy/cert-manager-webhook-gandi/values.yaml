@@ -1,0 +1,28 @@
+groupName: acme.gandi.cert-manager.io
+
+nameOverride: ""
+fullnameOverride: ""
+
+certManager:
+  namespace: cert-manager
+  serviceAccountName: cert-manager
+
+apiPriorityAndFairness: true
+
+secretReaderRBAC:
+  enabled: true
+  secrets: [ "gandi" ]
+
+image:
+  repository: ghcr.io/sbach/cert-manager-webhook-gandi
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 443
+
+affinity: {}
+nodeSelector: {}
+resources: {}
+tolerations: []
